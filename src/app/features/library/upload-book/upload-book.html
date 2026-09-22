@@ -1,1 +1,16 @@
-<p>upload-book works!</p>
+<div class="upload-container">
+  <label class="upload-button">
+    <input
+      type="file"
+      accept=".epub,.pdf,application/epub+zip,application/pdf"
+      (change)="onFileSelected($event)"
+      [disabled]="isUploading"
+      hidden
+    />
+    {{ isUploading ? 'Procesando...' : '+ Agregar libro' }}
+  </label>
+
+  @if (errorMessage) {
+    <p class="error">{{ errorMessage }}</p>
+  }
+</div>

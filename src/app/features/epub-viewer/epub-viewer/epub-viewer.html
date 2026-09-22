@@ -1,1 +1,21 @@
-<p>epub-viewer works!</p>
+<div class="epub-viewer">
+  <header class="viewer-toolbar">
+    <button (click)="goBack()">← Volver</button>
+    <span class="progress-indicator">{{ (progress() * 100) | number: '1.0-0' }}%</span>
+    <div class="font-controls">
+      <button (click)="decreaseFontSize()">A-</button>
+      <button (click)="increaseFontSize()">A+</button>
+      <button (click)="toggleTheme()">🌓</button>
+    </div>
+  </header>
+
+  @if (isLoading()) {
+    <p class="loading">Cargando libro...</p>
+  }
+
+  <div class="reader-area" [class.hidden]="isLoading()">
+    <button class="nav-zone left" (click)="prevPage()" aria-label="Página anterior"></button>
+    <div #viewerContainer class="epub-container"></div>
+    <button class="nav-zone right" (click)="nextPage()" aria-label="Página siguiente"></button>
+  </div>
+</div>

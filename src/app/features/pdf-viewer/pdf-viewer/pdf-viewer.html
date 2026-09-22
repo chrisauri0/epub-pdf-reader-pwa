@@ -1,1 +1,19 @@
-<p>pdf-viewer works!</p>
+<div class="pdf-viewer">
+  <header class="viewer-toolbar">
+    <button (click)="goBack()">← Volver</button>
+    <span class="page-indicator">{{ currentPage() }} / {{ totalPages() }}</span>
+  </header>
+
+  @if (isLoading()) {
+    <p class="loading">Cargando PDF...</p>
+  }
+
+  <div class="canvas-container" [class.hidden]="isLoading()">
+    <canvas #pdfCanvas></canvas>
+  </div>
+
+  <nav class="page-nav">
+    <button (click)="prevPage()" [disabled]="currentPage() <= 1">‹ Anterior</button>
+    <button (click)="nextPage()" [disabled]="currentPage() >= totalPages()">Siguiente ›</button>
+  </nav>
+</div>

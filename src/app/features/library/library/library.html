@@ -1,1 +1,31 @@
-<p>library works!</p>
+<div class="library-page">
+  <header>
+    <h1>Mi Biblioteca</h1>
+    <app-upload-book (bookAdded)="onBookAdded($event)" />
+  </header>
+@if (errorMessage()) {
+  <div style="padding: 2rem; color: #ff6b6b; white-space: pre-wrap;">
+    ERROR: {{ errorMessage() }}
+  </div>
+}
+  @if (isLoading()) {
+    <p class="loading">Cargando...</p>
+  } @else if (books().length === 0) {
+    <p class="empty-state">No tienes libros todavía. Agrega un EPUB o PDF para empezar.</p>
+  } @else {
+    <div class="book-grid">
+      @for (book of books(); track book.id) {
+        <div class="book-card" (click)="openBook(book)">
+          <div class="book-cover" [class.pdf]="book.type === 'pdf'">
+            {{ book.type.toUpperCase() }}
+          </div>
+          <h3>{{ book.title }}</h3>
+          @if (book.progress) {
+            <span class="progress-badge">{{ formatProgress(book.progress) }}</span>
+          }
+          <button class="delete-btn" (click)="deleteBook(book, $event)">✕</button>
+        </div>
+      }
+    </div>
+  }
+</div>
