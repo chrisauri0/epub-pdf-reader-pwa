@@ -25,17 +25,49 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
-    <script>
+
+<script>
+  // Polyfills para APIs de JS muy recientes que Safari 17.x de iPadOS aún no soporta
+  // (requeridos por epubjs y pdfjs-dist)
+
   if (typeof Iterator === 'undefined') {
     window.Iterator = function Iterator() {};
     window.Iterator.prototype = {};
   }
+
   if (typeof Promise.try !== 'function') {
     Promise.try = function(fn, ...args) {
       return new Promise((resolve) => resolve(fn(...args)));
     };
   }
+
+  if (typeof Uint8Array.prototype.toHex !== 'function') {
+    Uint8Array.prototype.toHex = function() {
+      return Array.from(this).map(b => b.toString(16).padStart(2, '0')).join('');
+    };
+  }
+
+  if (typeof Uint8Array.prototype.setFromHex !== 'function') {
+    Uint8Array.prototype.setFromHex = function(hex) {
+      const len = Math.floor(hex.length / 2);
+      for (let i = 0; i < len && i < this.length; i++) {
+        this[i] = parseInt(hex.substr(i * 2, 2), 16);
+      }
+      return { read: len * 2, written: len };
+    };
+  }
+
+  if (typeof Uint8Array.fromHex !== 'function') {
+    Uint8Array.fromHex = function(hex) {
+      const arr = new Uint8Array(Math.floor(hex.length / 2));
+      arr.setFromHex(hex);
+      return arr;
+    };
+  }
 </script>
+
+
+
   <app-root></app-root>
 
   <app-root></app-root>
