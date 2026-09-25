@@ -30,6 +30,11 @@
     window.Iterator = function Iterator() {};
     window.Iterator.prototype = {};
   }
+  if (typeof Promise.try !== 'function') {
+    Promise.try = function(fn, ...args) {
+      return new Promise((resolve) => resolve(fn(...args)));
+    };
+  }
 </script>
   <app-root></app-root>
 
