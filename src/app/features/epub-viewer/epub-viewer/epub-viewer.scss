@@ -1,0 +1,94 @@
+.epub-viewer {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: #0f0f10;
+  overflow: hidden;
+}
+
+.viewer-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  padding-top: calc(0.75rem + env(safe-area-inset-top));
+  background: #1a1a1d;
+  border-bottom: 1px solid #26262a;
+  flex-shrink: 0;
+  z-index: 20;
+
+  button {
+    color: #d4d4d8;
+    font-size: 0.9rem;
+  }
+
+  .progress-indicator {
+    color: #8a8a90;
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .font-controls {
+    display: flex;
+    gap: 0.5rem;
+
+    button {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #26262a;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+.loading {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b6b70;
+}
+
+.reader-area {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+
+  &.hidden {
+    display: none;
+  }
+}
+
+.epub-container {
+  position: absolute;
+  inset: 0;
+  // le damos margen a los lados para dejar espacio a las nav-zone sin que el texto quede debajo
+  padding: 0 60px;
+}
+
+.nav-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 60px;
+  z-index: 10;
+  background: transparent;
+  border: none;
+
+  &.left {
+    left: 0;
+  }
+
+  &.right {
+    right: 0;
+  }
+
+  &:active {
+    background: rgba(255, 255, 255, 0.03);
+  }
+}
