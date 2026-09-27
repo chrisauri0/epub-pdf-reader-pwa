@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy, ElementRef, ViewChild, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DecimalPipe } from '@angular/common';
 import { EpubReaderService } from '../../../core/services/epub-reader';
 import { LibraryService } from '../../../core/services/library';
 import { Book } from '../../../core/models/book';
-import { DecimalPipe } from '@angular/common';
+
 @Component({
   selector: 'app-epub-viewer',
   standalone: true,
@@ -17,7 +18,12 @@ export class EpubViewerComponent implements OnInit, OnDestroy {
   book?: Book;
   progress = signal(0);
   isLoading = signal(true);
-  fontSize = signal(100); // porcentaje
+  fontSize = signal(100);
+
+  private touchStartX = 0;
+  private touchStartY = 0;
+  private readonly SWIPE_THRESHOLD = 50;
+  private readonly SWIPE_MAX_VERTICAL = 60;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,10 +48,28 @@ export class EpubViewerComponent implements OnInit, OnDestroy {
     await this.epubReader.loadBook(this.book.file);
     this.epubReader.renderTo(this.containerRef.nativeElement, this.book.currentLocation);
 
-    // generar locations en segundo plano, no bloquea la lectura
     this.epubReader.generateLocations().then(() => this.updateProgress());
 
     this.isLoading.set(false);
+  }
+
+  onTouchStart(event: TouchEvent): void {
+    this.touchStartX = event.touches[0].clientX;
+    this.touchStartY = event.touches[0].clientY;
+  }
+
+  onTouchEnd(event: TouchEvent): void {
+    const deltaX = event.changedTouches[0].clientX - this.touchStartX;
+    const deltaY = event.changedTouches[0].clientY - this.touchStartY;
+
+    if (Math.abs(deltaY) > this.SWIPE_MAX_VERTICAL) return;
+    if (Math.abs(deltaX) < this.SWIPE_THRESHOLD) return;
+
+    if (deltaX < 0) {
+      this.nextPage();
+    } else {
+      this.prevPage();
+    }
   }
 
   async nextPage(): Promise<void> {
@@ -69,7 +93,6 @@ export class EpubViewerComponent implements OnInit, OnDestroy {
   }
 
   toggleTheme(): void {
-    // simple toggle claro/oscuro — puedes expandir a signal si quieres persistirlo
     const isDark = document.body.classList.toggle('dark-theme');
     this.epubReader.setTheme(isDark ? 'dark' : 'light');
   }

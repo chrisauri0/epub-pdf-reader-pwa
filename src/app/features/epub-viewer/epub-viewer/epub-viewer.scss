@@ -58,24 +58,29 @@
   position: relative;
   flex: 1;
   overflow: hidden;
+  touch-action: pan-y;
 
   &.hidden {
     display: none;
   }
 }
 
+// CLAVE: usamos left/right en vez de padding, para que el propio
+// ancho del contenedor (el que epub.js mide con clientWidth) ya
+// sea el correcto, sin que se desborde sobre las nav-zone.
 .epub-container {
   position: absolute;
-  inset: 0;
-  // le damos margen a los lados para dejar espacio a las nav-zone sin que el texto quede debajo
-  padding: 0 60px;
+  top: 0;
+  bottom: 0;
+  left: 56px;
+  right: 56px;
 }
 
 .nav-zone {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 60px;
+  width: 56px;
   z-index: 10;
   background: transparent;
   border: none;
@@ -89,6 +94,6 @@
   }
 
   &:active {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.04);
   }
 }
