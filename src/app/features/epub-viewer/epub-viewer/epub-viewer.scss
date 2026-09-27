@@ -75,7 +75,6 @@
   left: 56px;
   right: 56px;
 }
-
 .nav-zone {
   position: absolute;
   top: 0;
@@ -84,16 +83,27 @@
   z-index: 10;
   background: transparent;
   border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.15); // tenue mientras no se toca
+  font-size: 1.5rem;
+  transition: background 0.15s ease, color 0.15s ease;
 
   &.left {
     left: 0;
+    justify-content: flex-start;
+    padding-left: 0.5rem;
   }
 
   &.right {
     right: 0;
+    justify-content: flex-end;
+    padding-right: 0.5rem;
   }
 
   &:active {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.4);
   }
 }
