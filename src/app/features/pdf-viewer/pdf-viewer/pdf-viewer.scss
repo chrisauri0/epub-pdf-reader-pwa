@@ -1,0 +1,102 @@
+.pdf-viewer {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: #0f0f10;
+  overflow: hidden;
+}
+
+.viewer-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  padding-top: calc(0.75rem + env(safe-area-inset-top));
+  background: #1a1a1d;
+  border-bottom: 1px solid #26262a;
+  flex-shrink: 0;
+  z-index: 10;
+
+  .back-btn {
+    color: #d4d4d8;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .page-indicator {
+    color: #8a8a90;
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.loading {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b6b70;
+}
+
+.canvas-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto; // por si una página específica es más alta que la pantalla, permite scroll vertical
+  -webkit-overflow-scrolling: touch;
+  padding: 1rem;
+  touch-action: pan-y; // deja scroll vertical nativo, nosotros interceptamos el swipe horizontal a mano
+
+  &.hidden {
+    display: none;
+  }
+
+  canvas {
+    display: block;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+    border-radius: 4px;
+  }
+}
+
+// Botones flotantes, SIEMPRE visibles sin importar el tamaño del canvas
+.floating-nav {
+  position: fixed;
+  bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1rem;
+  pointer-events: none; // el contenedor no bloquea toques, solo los botones
+  z-index: 20;
+
+  &.hidden {
+    display: none;
+  }
+
+  .nav-btn {
+    pointer-events: auto;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(30, 30, 34, 0.85);
+    backdrop-filter: blur(8px);
+    color: #f2f2f2;
+    font-size: 1.6rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    &:disabled {
+      opacity: 0.25;
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.92);
+    }
+  }
+}

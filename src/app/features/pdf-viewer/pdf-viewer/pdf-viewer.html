@@ -1,6 +1,6 @@
 <div class="pdf-viewer">
   <header class="viewer-toolbar">
-    <button (click)="goBack()">← Volver</button>
+    <button class="back-btn" (click)="goBack()">← Volver</button>
     <span class="page-indicator">{{ currentPage() }} / {{ totalPages() }}</span>
   </header>
 
@@ -8,12 +8,22 @@
     <p class="loading">Cargando PDF...</p>
   }
 
-  <div class="canvas-container" [class.hidden]="isLoading()">
+  <div
+    #canvasContainer
+    class="canvas-container"
+    [class.hidden]="isLoading()"
+    (touchstart)="onTouchStart($event)"
+    (touchend)="onTouchEnd($event)"
+  >
     <canvas #pdfCanvas></canvas>
   </div>
 
-  <nav class="page-nav">
-    <button (click)="prevPage()" [disabled]="currentPage() <= 1">‹ Anterior</button>
-    <button (click)="nextPage()" [disabled]="currentPage() >= totalPages()">Siguiente ›</button>
-  </nav>
+  <div class="floating-nav" [class.hidden]="isLoading()">
+    <button class="nav-btn prev" (click)="prevPage()" [disabled]="currentPage() <= 1" aria-label="Página anterior">
+      ‹
+    </button>
+    <button class="nav-btn next" (click)="nextPage()" [disabled]="currentPage() >= totalPages()" aria-label="Página siguiente">
+      ›
+    </button>
+  </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, signal, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PdfReaderService } from '../../../core/services/pdf-reader';
 import { LibraryService } from '../../../core/services/library';
@@ -12,11 +12,17 @@ import { Book } from '../../../core/models/book';
 })
 export class PdfViewerComponent implements OnInit, OnDestroy {
   @ViewChild('pdfCanvas', { static: true }) canvasRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('canvasContainer', { static: true }) containerRef!: ElementRef<HTMLDivElement>;
 
   book?: Book;
   currentPage = signal(1);
   totalPages = signal(0);
   isLoading = signal(true);
+
+  private touchStartX = 0;
+  private touchStartY = 0;
+  private readonly SWIPE_THRESHOLD = 50; // px mínimos para contar como swipe
+  private readonly SWIPE_MAX_VERTICAL = 60; // tolerancia vertical, para no confundir con scroll
 
   constructor(
     private route: ActivatedRoute,
@@ -50,7 +56,34 @@ export class PdfViewerComponent implements OnInit, OnDestroy {
 
   private async renderCurrentPage(): Promise<void> {
     const page = await this.pdfReader.getPage(this.currentPage());
-    await this.pdfReader.renderPageToCanvas(page, this.canvasRef.nativeElement);
+    const containerWidth = this.containerRef.nativeElement.clientWidth;
+    await this.pdfReader.renderPageToCanvas(page, this.canvasRef.nativeElement, containerWidth);
+  }
+
+  @HostListener('window:resize')
+  async onResize(): Promise<void> {
+    if (!this.isLoading()) {
+      await this.renderCurrentPage();
+    }
+  }
+
+  onTouchStart(event: TouchEvent): void {
+    this.touchStartX = event.touches[0].clientX;
+    this.touchStartY = event.touches[0].clientY;
+  }
+
+  onTouchEnd(event: TouchEvent): void {
+    const deltaX = event.changedTouches[0].clientX - this.touchStartX;
+    const deltaY = event.changedTouches[0].clientY - this.touchStartY;
+
+    if (Math.abs(deltaY) > this.SWIPE_MAX_VERTICAL) return; // fue scroll vertical, ignorar
+    if (Math.abs(deltaX) < this.SWIPE_THRESHOLD) return; // muy corto, no cuenta
+
+    if (deltaX < 0) {
+      this.nextPage();
+    } else {
+      this.prevPage();
+    }
   }
 
   async nextPage(): Promise<void> {

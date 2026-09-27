@@ -36,10 +36,11 @@
     flex: 1;
     overflow-y: auto;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1.5rem;
     padding: 1.5rem;
     -webkit-overflow-scrolling: touch;
+    align-content: start;
   }
 }
 
@@ -48,30 +49,47 @@
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
   background: #1a1a1d;
   border: 1px solid #26262a;
-  transition: transform 0.15s ease, border-color 0.15s ease;
+  transition: transform 0.15s ease;
 
   &:active {
-    transform: scale(0.97);
+    transform: scale(0.96);
   }
 
   .book-cover {
-    aspect-ratio: 2 / 3;
+    aspect-ratio: 3 / 4;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #2a2a3d, #1a1a2e);
-    color: #7a7a9a;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
+    background: #23233a;
 
     &.pdf {
-      background: linear-gradient(135deg, #3d2a2a, #2e1a1a);
-      color: #9a7a7a;
+      background: #332323;
+    }
+
+    .monogram {
+      font-size: 2.75rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.18);
+      letter-spacing: -0.02em;
+    }
+
+    .type-badge {
+      position: absolute;
+      bottom: 0.5rem;
+      right: 0.5rem;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.55);
+      background: rgba(0, 0, 0, 0.35);
+      padding: 0.2rem 0.4rem;
+      border-radius: 5px;
     }
   }
 
@@ -106,8 +124,8 @@
     position: absolute;
     top: 0.5rem;
     right: 0.5rem;
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     background: rgba(0, 0, 0, 0.65);
     backdrop-filter: blur(4px);
@@ -120,7 +138,6 @@
     transition: opacity 0.15s ease;
   }
 
-  &:hover .delete-btn,
   &:active .delete-btn {
     opacity: 1;
   }

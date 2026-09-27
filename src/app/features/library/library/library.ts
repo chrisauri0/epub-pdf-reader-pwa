@@ -45,7 +45,9 @@ async ngOnInit(): Promise<void> {
   onBookAdded(book: Book): void {
     this.books.update((current) => [book, ...current]);
   }
-
+  getInitial(title: string): string {
+    return title.trim().charAt(0).toUpperCase() || '?';
+  }
   openBook(book: Book): void {
     this.router.navigate(['/read', book.type, book.id]);
   }

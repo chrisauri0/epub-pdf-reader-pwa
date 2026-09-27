@@ -3,11 +3,7 @@
     <h1>Mi Biblioteca</h1>
     <app-upload-book (bookAdded)="onBookAdded($event)" />
   </header>
-@if (errorMessage()) {
-  <div style="padding: 2rem; color: #ff6b6b; white-space: pre-wrap;">
-    ERROR: {{ errorMessage() }}
-  </div>
-}
+
   @if (isLoading()) {
     <p class="loading">Cargando...</p>
   } @else if (books().length === 0) {
@@ -17,7 +13,8 @@
       @for (book of books(); track book.id) {
         <div class="book-card" (click)="openBook(book)">
           <div class="book-cover" [class.pdf]="book.type === 'pdf'">
-            {{ book.type.toUpperCase() }}
+            <span class="monogram">{{ getInitial(book.title) }}</span>
+            <span class="type-badge">{{ book.type }}</span>
           </div>
           <h3>{{ book.title }}</h3>
           @if (book.progress) {
